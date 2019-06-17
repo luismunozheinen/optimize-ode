@@ -1,2 +1,11 @@
-# optimize-ode
+# Optimize-ode
 Computational optimization of  larger non-linear differential equation system using DifferentialEquations.jl
+
+### Mathematical Formulation of the ODE system for a Stick-slip model using Rate-and-State Friction Velocity
+
+The system models the interaction of <a href="https://www.codecogs.com/eqnedit.php?latex=l&space;\times&space;d" target="_blank"><img src="https://latex.codecogs.com/gif.latex?l&space;\times&space;d" title="l \times d" /></a>  blocks. Each block has 3 degrees of freedom corresponding position **u** , velocity **v** and state **&theta;** . The governing equations of motions for each block are prescribed as in the following:
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\begin{cases}&space;\dot{u_i}=v_i-v_0\\&space;\dot{v_i}=(-1/m)\Big(k_c(u_{i&plus;1}&plus;u_{j&plus;1}-4u_i&plus;u_{i-1}&plus;u_{j-1})&plus;k_pu_i&plus;\sigma_{n}a\Big[\sinh^{-1}\left(\frac{V}{2v_0}e^{\frac{\theta}{a}}\right)\Big]\Big)\\&space;\dot{\theta_i}=\frac{bv_0}{D_c}\left(e^{\frac{\tau_0-\theta}{b}}-\frac{v}{v_0}\right)\\&space;\end{cases}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\begin{cases}&space;\dot{u_i}=v_i-v_0\\&space;\dot{v_i}=(-1/m)\Big(k_c(u_{i&plus;1}&plus;u_{j&plus;1}-4u_i&plus;u_{i-1}&plus;u_{j-1})&plus;k_pu_i&plus;\sigma_{n}a\Big[\sinh^{-1}\left(\frac{V}{2v_0}e^{\frac{\theta}{a}}\right)\Big]\Big)\\&space;\dot{\theta_i}=\frac{bv_0}{D_c}\left(e^{\frac{\tau_0-\theta}{b}}-\frac{v}{v_0}\right)\\&space;\end{cases}" title="\begin{cases} \dot{u_i}=v_i-v_0\\ \dot{v_i}=(-1/m)\Big(k_c(u_{i+1}+u_{j+1}-4u_i+u_{i-1}+u_{j-1})+k_pu_i+\sigma_{n}a\Big[\sinh^{-1}\left(\frac{V}{2v_0}e^{\frac{\theta}{a}}\right)\Big]\Big)\\ \dot{\theta_i}=\frac{bv_0}{D_c}\left(e^{\frac{\tau_0-\theta}{b}}-\frac{v}{v_0}\right)\\ \end{cases}" /></a>
+
+
+where m is the block mass, k<sub>p</sub> the block to driving plate spring stiffness, k<sub>c</sub> the inter-block spring stiffness, &nu; the driving plate velocity, &sigma; the applied normal stress, $tau;<sub>0</sub> the static friction force, D<sub>c</sub> the characteristic Length Scale and A and B are friction coefficient of the rate-and-state friction law. For further reading, refer to [Burridge-Knopoff Model](https://pubs.geoscienceworld.org/ssa/bssa/article/57/3/341/116471/model-and-theoretical-seismicity).
