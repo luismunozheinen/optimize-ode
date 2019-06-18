@@ -59,6 +59,7 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
 - [ ] Check [Operators](http://docs.juliadiffeq.org/latest/features/diffeq_operator.html) for <a href="https://www.codecogs.com/eqnedit.php?latex=A\times&space;\textbf{x}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A\times&space;\textbf{x}" title="A\times \textbf{x}" /></a> handling
 - [ ] Check [GPU](http://juliadiffeq.org/2019/05/09/GPU.html) functionality
 - [ ] Parallelism (even at the level of the solver [Parallel Solver](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Parallel-Explicit-Runge-Kutta-Methods-1))
+- [ ] MKL
 
 
 
