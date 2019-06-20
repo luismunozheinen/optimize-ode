@@ -74,6 +74,8 @@ prob = SplitODEProblem(f1,f0,u0,tspan,p)
 @benchmark sol7 = solve(prob,CVODE_BDF(linear_solver=:GMRES),reltol=1e-6,abstol=1e-6,save_everystep=false,saveat=1.0,progress=true); #solve problem and benchmark cpu requirements
 @time sol8 = solve(prob,KenCarp4(linsolve=LinSolveGMRES()),reltol=1e-6,abstol=1e-6,save_everystep=false,saveat=1.0,progress=true); #solve problem and benchmark cpu requirements
 
+
+#POST_PROCESSING----------------------------------------------------------------
 #Extract u_i,v_i,θ_i from solution "sol_i"
 
 function extract_srcParamRS(sol)
