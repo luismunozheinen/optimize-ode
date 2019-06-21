@@ -31,16 +31,15 @@ While the actual problem uses 10x20 blocks, simulates 20000 timesteps and uses `
 
 Model |  CPU Time (avg)| No Alloc | Memory | Setup 
 ----- | --------- | -------- | ------ | -----
-Model 1 | 0.68 sec | 20.24 k | 86.6 MiB | Std
-Model 1 | ||| linsolve=LinSolveGMRES()
-Model 2 | 74 ms | 54.60 k | 12.75 MiB | Std
-Model 2 | 69 ms | 54.99 k | 11.175 MiB | linsolve=LinSolveGMRES()
-Model 2 | 74 ms | 52.49 k | 7.63 MiB | Array_Slicing + linsolve
-Model 2 | 73.7 ms | 53.73 k | 11.79 MiB | @. + linsolve
-Model 2 | 76.3 ms | 51.24 k | 7.67 MiB | @. + Array_Slicing + linsolve
-Model 2 | 391.67 ms | 4.7 M | 91.8 MiB | Pre_def
-Model 2 | 2.87 s | 2.2 M | 351 MiB | MKL
-Model 2 |  | |  | SplitODE
+1 |  1272 s | 50.1 k | 66.2 MiB | Model 2 + Rodas5(autodiff=false)
+2 | 16 s | 1.2 M | 42.8 MiB | Model 2 + CVODE_BDF(linear_solver=:GMRES)
+3 | 74 s | 3.1 M | 139.8 MiB | Model 2 + ARKODE(linear_solver=:GMRES)
+4 | 69 ms | 54.99 k | 11.175 MiB | Model 1 + Rodas5()
+5 | 74 ms | 52.49 k | 7.63 MiB | Model 2 + SplitODEProblem + Rodas5(autodiff=false)
+6 | 73.7 ms | 53.73 k | 11.79 MiB | Model 2 + SplitODEProblem + ARKODE(linear_solver=:GMRES),
+7 | 76.3 ms | 51.24 k | 7.67 MiB | Model 2 + SplitODEProblem + CVODE_BDF(linear_solver=:GMRES)
+8 | 391.67 ms | 4.7 M | 91.8 MiB | Model 2 + SplitODEProblem + KenCarp4(linsolve=LinSolveGMRES())
+
 
 As a note for Model 1, 1 iteration over the linear part takes `0.000079 seconds (4 allocations: 160 bytes)`
  while the friction force takes `0.000094 seconds (46 allocations: 4.625 KiB)`
