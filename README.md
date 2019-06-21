@@ -26,7 +26,7 @@ The differential equations are solved using [DifferentialEquations.jl](https://g
 For the first step, two options have been considered: Either write out the equations for each block and use [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl) to pass the equations efficiently (ref. *Model1*) or use a matrix implementation as <a href="https://www.codecogs.com/eqnedit.php?latex=A\times&space;\textbf{x}&space;&plus;&space;f(\textbf{x})&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A\times&space;\textbf{x}&space;&plus;&space;f(\textbf{x})&space;=&space;0" title="A\times \textbf{x} + f(\textbf{x}) = 0" /></a> (ref. *Model2* ). Within each approach, different implementations are suggested to optimize the computations. 
 
 The second step is mainly defined by computational accuracy and has been previously checked. As a conclusion, the `Rodas5()` algorithm has most efficient for larger systems using `reltol=1e-6` and `abstol=1e-6` (and `save_everystep=false`). All functions use in-place allocations.
-<!--- 
+ 
 While the actual problem uses 10x20 blocks, simulates 20000 timesteps and uses `callback` functions to store intermediate results, a benchmark is shown for a 10x10 block system for 100 timesteps. The simulations were run on a local machine.
 
 Model |  CPU Time (avg)| No Alloc | Memory | Setup 
@@ -34,19 +34,16 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
 1 |  1272 s | 50.1 k | 66.2 MiB | Model 2 + Rodas5(autodiff=false)
 2 | 16 s | 1.2 M | 42.8 MiB | Model 2 + CVODE_BDF(linear_solver=:GMRES)
 3 | 74 s | 3.1 M | 139.8 MiB | Model 2 + ARKODE(linear_solver=:GMRES)
-4 | 69 ms | 54.99 k | 11.175 MiB | Model 1 + Rodas5()
-5 | 74 ms | 52.49 k | 7.63 MiB | Model 2 + SplitODEProblem + Rodas5(autodiff=false)
-6 | 73.7 ms | 53.73 k | 11.79 MiB | Model 2 + SplitODEProblem + ARKODE(linear_solver=:GMRES),
-7 | 76.3 ms | 51.24 k | 7.67 MiB | Model 2 + SplitODEProblem + CVODE_BDF(linear_solver=:GMRES)
-8 | 391.67 ms | 4.7 M | 91.8 MiB | Model 2 + SplitODEProblem + KenCarp4(linsolve=LinSolveGMRES())
+4 | 81 s| 527 M | 35.16 GiB | Model 1 + Rodas5()
+5 | 1156 s | 50.1 M | 66.2 MiB | Model 2 + SplitODEProblem + Rodas5(autodiff=false)
+6 | 37 s | 62 M | 187.2 MiB | Model 2 + SplitODEProblem + ARKODE(linear_solver=:GMRES),
+7 | n.a. | n.a. | n.a. | Model 2 + SplitODEProblem + CVODE_BDF(linear_solver=:GMRES)
+8 |  284 s | 132 M | 25 MiB | Model 2 + SplitODEProblem + KenCarp4(linsolve=LinSolveGMRES())
 
 
-As a note for Model 1, 1 iteration over the linear part takes `0.000079 seconds (4 allocations: 160 bytes)`
- while the friction force takes `0.000094 seconds (46 allocations: 4.625 KiB)`
+As a note for Model 2, a single call of the friction functio `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec
 
----
-
-Additional Time required for Callbacks for actual simulations (simulation time = 20000 [s], 10x20 blocks)
+Additional Time required for Callbacks for actual simulations (simulation time = 20000 [s], 10x20 blocks) using Model 1
 
 Model |  CPU Time (avg)| No Alloc | Memory | Setup 
 ----- | --------- | -------- | ------ | -----
@@ -54,7 +51,6 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
  Model 1 | 19.271 h | 310.33 M | 580.9 GiB | + Pre-simulation of 10 [sec] 
  Model 2 | 17.638 h | 162.12 M | 28.4 GiB | -no Callbacks
  
- -->
 ### Further Checks to do
 - [ ] Check [SplitODE](http://docs.juliadiffeq.org/latest/types/split_ode_types.html)'s to take advantage of (non-) linear separation and new developments i.e. [Exponential Krylov Integrator](http://juliadiffeq.org/2018/03/31/AdaptiveLowSDE.html)
 - [ ] Check [Operators](http://docs.juliadiffeq.org/latest/features/diffeq_operator.html) for <a href="https://www.codecogs.com/eqnedit.php?latex=A\times&space;\textbf{x}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A\times&space;\textbf{x}" title="A\times \textbf{x}" /></a> handling
