@@ -3,7 +3,10 @@ Download the git into a local directory which is a recognized working directory 
 
 Files `setup_*` are modules, no need to run them! They will be imported into `optimize_ode`
 
-`optimize_ode` is the main file to run. Make sure you first install all required packages listed in the first line
+`optimize_ode` is the main file to run for models 1 and 2. Make sure you first install all required packages listed in the first line
+**Update**
+Run `optimize_ode2` as a main code to make use of model 3.
+
 Subsequent code sets up the differential equation to solve and therefore:
 
  1. Loads the Initial Conditions
