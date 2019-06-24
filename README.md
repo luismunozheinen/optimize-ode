@@ -31,7 +31,7 @@ While the actual problem uses 10x20 blocks, simulates 20000 timesteps and uses `
 
 Model |  CPU Time (avg)| No Alloc | Memory | Setup 
 ----- | --------- | -------- | ------ | -----
-1 |  1272 s | 50.1 k | 66.2 MiB | Model 2 + Rodas5(autodiff=false)
+1 |  1272 s | 2.25 M | 66.2 MiB | Model 2 + Rodas5(autodiff=false)
 2 | 16 s | 1.2 M | 42.8 MiB | Model 2 + CVODE_BDF(linear_solver=:GMRES)
 3 | 74 s | 3.1 M | 139.8 MiB | Model 2 + ARKODE(linear_solver=:GMRES)
 4 | 81 s| 527 M | 35.16 GiB | Model 1 + Rodas5()
@@ -41,7 +41,7 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
 8 |  284 s | 132 M | 25 MiB | Model 2 + SplitODEProblem + KenCarp4(linsolve=LinSolveGMRES())
 
 
-As a note for Model 2, a single call of the friction functio `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec
+As a note for Model 2, a single call of the friction functio `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec. In addition, a function using array slicing with `@view` leads to 16 micro-sec evaluation together with 12 allocations.
 
 Additional Time required for Callbacks for actual simulations (simulation time = 20000 [s], 10x20 blocks) using Model 1
 
