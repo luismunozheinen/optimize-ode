@@ -43,6 +43,8 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
 
 As a note for Model 2, a single call of the friction functio `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec. In addition, a function using array slicing with `@view` leads to 16 micro-sec evaluation together with 12 allocations.
 
+A single call of the final ode function in Model 2 requires 53 micro-sec. A semi-develop alternative (uwrite out equations in a loop while evaluating the matrix each time) lead to 673 micro-sec.
+
 Additional Time required for Callbacks for actual simulations (simulation time = 20000 [s], 10x20 blocks) using Model 1
 
 Model |  CPU Time (avg)| No Alloc | Memory | Setup 
