@@ -25,6 +25,9 @@ The differential equations are solved using [DifferentialEquations.jl](https://g
 
 For the first step, two options have been considered: Either write out the equations for each block and use [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl) to pass the equations efficiently (ref. *Model1*) or use a matrix implementation as <a href="https://www.codecogs.com/eqnedit.php?latex=A\times&space;\textbf{x}&space;&plus;&space;f(\textbf{x})&space;=&space;0" target="_blank"><img src="https://latex.codecogs.com/gif.latex?A\times&space;\textbf{x}&space;&plus;&space;f(\textbf{x})&space;=&space;0" title="A\times \textbf{x} + f(\textbf{x}) = 0" /></a> (ref. *Model2* ). Within each approach, different implementations are suggested to optimize the computations. 
 
+**Update**
+Previous models have been updated by *Model 3* This model is written in the style of (Optimizing DiffEq Code)[http://juliadiffeq.org/DiffEqTutorials.jl/html/introduction/optimizing_diffeq_code.html].
+
 The second step is mainly defined by computational accuracy and has been previously checked. As a conclusion, the `Rodas5()` algorithm has most efficient for larger systems using `reltol=1e-6` and `abstol=1e-6` (and `save_everystep=false`). All functions use in-place allocations.
  
 While the actual problem uses 10x20 blocks, simulates 20000 timesteps and uses `callback` functions to store intermediate results, a benchmark is shown for a 10x10 block system for 100 timesteps. The simulations were run on a local machine.
@@ -39,11 +42,12 @@ Model |  CPU Time (avg)| No Alloc | Memory | Setup
 6 | 37 s | 62 M | 187.2 MiB | Model 2 + SplitODEProblem + ARKODE(linear_solver=:GMRES),
 7 | n.a. | n.a. | n.a. | Model 2 + SplitODEProblem + CVODE_BDF(linear_solver=:GMRES)
 8 |  284 s | 132 M | 25 MiB | Model 2 + SplitODEProblem + KenCarp4(linsolve=LinSolveGMRES())
+9 | 35 s| 66 k | 15.91 MiB | Model 3 + Rodas5()
 
 
-As a note for Model 2, a single call of the friction functio `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec. In addition, a function using array slicing with `@view` leads to 16 micro-sec evaluation together with 12 allocations.
+As a note for Model 2, a single call of the friction function `friction!` requires 14.9 micro-sec while `friction2!()`requires 42 micro-sec. As a comparison, the linear par `mul!` requires 35.1 micro-sec. In addition, a function using array slicing with `@view` leads to 16 micro-sec evaluation together with 12 allocations.
 
-A single call of the final ode function in Model 2 requires 53 micro-sec. A semi-develop alternative (uwrite out equations in a loop while evaluating the matrix each time) lead to 673 micro-sec.
+A single call of the final ode function in Model 2 requires 53 micro-sec. A semi-develop alternative (uwrite out equations in a loop while evaluating the matrix each time) lead to 673 micro-sec. Model 3 reduces the cost to 15 micro-sec with a single allocation.
 
 Additional Time required for Callbacks for actual simulations (simulation time = 20000 [s], 10x20 blocks) using Model 1
 
